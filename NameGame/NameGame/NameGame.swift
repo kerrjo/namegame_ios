@@ -158,12 +158,21 @@ class NameGame {
     /// Setup new round of current game.
     func newRound() {
         round += 1
-        pickItems()
+        shuffleAndPickItems()
         delegate?.nameGameRoundReady(self)
     }
     
+    
+    private func shuffleAndPickItems() {
+        gameData.shuffle()
+        inPlayGameItems = Array(0..<6)
+        // Pick solution item
+        let r = Int(arc4random_uniform(UInt32(inPlayGameItems.count - 1)))
+        inPlaySolutionItem = inPlayGameItems[r]
+    }
+
     /// Pick gamePlay items.
-    private func pickItems() {
+    private func pickItemsRandom() {
         
         var alreadySelected = IndexSet()
         var selectedItems: [Int] = []
@@ -257,6 +266,28 @@ class NameGame {
         } 
     }
 
+}
+
+
+// MARK: Shuffle arrays
+
+extension Array {
+    mutating func shuffle() {
+        for i in 0..<(count - 1) {
+            let j = Int(arc4random_uniform(UInt32(count - i))) + i
+            guard i != j else { continue }
+            swap(&self[i], &self[j])
+        }
+    }
+}
+
+extension Array {
+    /// Non mutating variant
+    func shuffled() -> [Element] {
+        var copySelf = self
+        copySelf.shuffle()
+        return copySelf
+    }
 }
 
 
