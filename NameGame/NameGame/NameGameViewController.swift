@@ -46,7 +46,7 @@ class NameGameViewController: UIViewController {
     
     /// Commence play.
     func playGame() {
-        title = nameGame.gameTitle()
+        title = nameGame.gameFilter.displayName
         resetButtons()
         DispatchQueue.global().async {
             self.nameGame.newGame()  // response is in delegate method
